@@ -1,0 +1,39 @@
+name: Daily bbbobo + pokemy watcher
+
+on:
+  schedule:
+    # 台灣 09:00 = UTC 01:00
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-spider:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run watcher
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python - << 'EOF'
+          import os
+          import bbbobo_spider
+
+          bbbobo_spider.BOT_TOKEN = os.environ["BOT_TOKEN"]
+          bbbobo_spider.CHAT_ID = int(os.environ["CHAT_ID"])
+          bbbobo_spider.main()
+          EOF
