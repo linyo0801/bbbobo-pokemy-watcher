@@ -196,7 +196,7 @@ def main():
 
         # 2. pokemy 部分
     for kw in KEYWORDS:
-        items = site_pokemy.crawlkeyword(kw)
+        items = site_pokemy.crawl_keyword(kw) 
         print("pokemy", kw, "抓到商品數：", len(items))
         for it in items:
             key = f"pokemy_{kw}_{it['gid']}"
