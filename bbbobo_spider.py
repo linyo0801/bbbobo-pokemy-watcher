@@ -135,11 +135,16 @@ def crawlkeyword(keyword, maxpages=50):
             break
             
         newinthispage = []
-        for it in items:
-            gid = it['gid']
-            if gid not in all_seen_gids:  # ← 全域去重
-                all_seen_gids.add(gid)
-                newinthispage.append(it)
+            for it in items:
+                # 只保留標題包含關鍵字的商品
+                if kw not in it['title']:
+                    continue
+    
+                key = f"{kw}_{it['gid']}"
+                if key not in seen:
+                    seen.add(key)
+                    it["keyword"] = kw
+                    new_items.append(it)
         
         if not newinthispage:
             break
@@ -198,9 +203,13 @@ def main():
     for kw in KEYWORDS:
         items = site_pokemy.crawl_keyword(kw) 
         print("pokemy", kw, "抓到商品數：", len(items))
-        for it in items:
-            key = f"pokemy_{kw}_{it['gid']}"
-            if key not in seen:
+            for it in items:
+                # 只保留標題包含關鍵字的商品
+                if kw not in it['title']:
+                    continue
+                
+                key = f"pokemy_{kw}_{it['gid']}"
+                if key not in seen:
                 seen.add(key)
                 # site_pokemy 已經先塞好 keyword / site
                 new_items.append(it)
