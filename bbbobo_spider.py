@@ -124,36 +124,35 @@ def parse_items(html):
 
 
 
-def crawl_keyword(keyword, max_pages=50):
-    all_items = []
+def crawlkeyword(keyword, maxpages=50):
+    allitems = []
     page = 1
-    seen_gids_in_crawl = set()  # 這次爬蟲中已經看過的 gid
-
-    while page <= max_pages:
-        html = fetch_page(keyword, page=page)
-        items = parse_items(html)
-        print(keyword, "第", page, "頁，抓到", len(items), "筆")
-
+    all_seen_gids = set()  # ← 改這行，全域去重
+    
+    while page <= maxpages:
+        html = fetchpage(keyword, page=page)
+        items = parseitems(html)
+        print(f"{keyword} 第 {page} 頁 {len(items)} 個商品")
+        
         if not items:
             break
-
-        # 檢查這一頁是不是全部都重複
-        new_in_this_page = []
+            
+        newinthispage = []
         for it in items:
-            gid = it["gid"]
-            if gid not in seen_gids_in_crawl:
-                seen_gids_in_crawl.add(gid)
-                new_in_this_page.append(it)
-
-        if not new_in_this_page:
-            # 這一頁完全沒有新的 gid，代表已經在重複上一頁的內容，結束翻頁
+            gid = it['gid']
+            if gid not in all_seen_gids:  # ← 全域去重
+                all_seen_gids.add(gid)
+                newinthispage.append(it)
+        
+        if not newinthispage:
             break
-
-        all_items.extend(new_in_this_page)
+            
+        allitems.extend(newinthispage)
         page += 1
         time.sleep(1)
+    
+    return allitems
 
-    return all_items
 
 
 
