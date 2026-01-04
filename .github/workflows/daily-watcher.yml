@@ -36,4 +36,12 @@ jobs:
           bbbobo_spider.BOT_TOKEN = os.environ["BOT_TOKEN"]
           bbbobo_spider.CHAT_ID = int(os.environ["CHAT_ID"])
           bbbobo_spider.main()
+    
+          # 清除重複記錄，只抓新品
+          import os
+          if os.path.exists('seenitems.json'):
+              os.remove('seenitems.json')
+          print("已清除 seenitems.json，下次只抓新品")
           EOF
+
+
