@@ -1,6 +1,3 @@
-
-
-
 import json
 import os
 import time
@@ -130,8 +127,8 @@ def crawlkeyword(keyword, maxpages=50):
     all_seen_gids = set()  # ← 改這行，全域去重
     
     while page <= maxpages:
-        html = fetchpage(keyword, page=page)
-        items = parseitems(html)
+        html = fetch_page(keyword, page=page)
+        items = parse_items(html)
         print(f"{keyword} 第 {page} 頁 {len(items)} 個商品")
         
         if not items:
@@ -178,16 +175,7 @@ def send_photo(caption, photo_url):
     resp = requests.post(url, data=payload, timeout=15)
     resp.raise_for_status()
 
-def send_photo(caption, photo_url):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
-    payload = {
-        "chat_id": CHAT_ID,
-        "photo": photo_url,
-        "caption": caption,
-        "parse_mode": "HTML",
-    }
-    resp = requests.post(url, data=payload, timeout=15)
-    resp.raise_for_status()
+
 
 
 
