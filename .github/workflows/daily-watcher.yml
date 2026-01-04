@@ -29,19 +29,13 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
-          python - << 'EOF'
-          import os
-          import bbbobo_spider
+          python bbbobo_spider.py
 
-          bbbobo_spider.BOT_TOKEN = os.environ["BOT_TOKEN"]
-          bbbobo_spider.CHAT_ID = int(os.environ["CHAT_ID"])
-          bbbobo_spider.main()
-    
-          # 清除重複記錄，只抓新品
-          import os
-          if os.path.exists('seenitems.json'):
-              os.remove('seenitems.json')
-          print("已清除 seenitems.json，下次只抓新品")
-          EOF
-
-
+      - name: Commit updated seen_items
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add seen_items.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update seen_items.json [skip ci]"
+          git push
+      
